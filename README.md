@@ -1,4 +1,23 @@
-# crr_workflow
+
+## Space Object Tracking Pipelines
+
+### As-of Today Pipeline
+
+Right now, space operators track satellites and debris using observations from radars, optical telescopes, GNSS signals, and telemetry. This raw tracking data is processed to figure out each object’s current orbit. From this, simplified orbit models called **TLEs** (for quick predictions) and more precise **ephemeris files** (for detailed paths) are generated. Using these, predicted trajectories of space objects are computed and checked for potential close encounters, called **conjunctions**. 
+
+If a risky event is detected, a **Conjunction Data Message (CDM)** is sent to satellite operators, who then decide whether to maneuver their satellites or not. After any action, the satellite’s state is updated, and the process repeats with new tracking data. This pipeline relies heavily on human decision-making and traditional orbit propagation methods.
+
+---
+
+### Future Pipeline with AI/ML
+
+In the future, this process could be enhanced with **AI and machine learning**. In addition to traditional tracking, extra sensors, crosslinks, and space-based measurements feed into a **data fusion layer**, which combines information from multiple sources to get a more accurate picture of all objects in orbit. 
+
+Then, a **risk inference engine** uses AI models to predict collision risks, rank them, and provide optimized decision options. Operators—or even automated systems—can use the **decision support layer** to plan maneuvers, which are executed autonomously. Afterward, a **post-maneuver feedback loop** updates the system with real outcomes, feeding into a **continuous learning process** that improves predictions over time. 
+
+The AI/ML blocks—**data fusion, risk inference, decision support, autonomous execution, and continuous learning**—are what make the future pipeline smarter, faster, and more adaptive than today’s system.
+
+
 
 ```mermaid
 flowchart LR
