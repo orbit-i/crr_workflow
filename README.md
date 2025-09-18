@@ -1,5 +1,50 @@
+# Space Object Tracking and Conjunction Risk Response Pipeline
 
-## Space Object Tracking Pipelines
+## Abstract: Tomorrow Collision Avoidance Pipeline
+
+The future collision avoidance pipeline integrates both human-in-the-loop ground-based observations and autonomous space-based measurements to feed a unified data fusion and orbit determination system. Technical operations include orbit propagation, risk inference using AI/ML models, and autonomous maneuver execution with post-maneuver feedback. 
+
+Economical considerations are captured through a decision and strategy categorization layer, where actionable strategies—Prevent, Mitigate, Share/Transfer, Accept, or Do Nothing—are selected based on payout parameters such as collision probability, maneuver cost, and potential insurance or cooperative arrangements. 
+
+The pipeline forms a closed-loop system: technical measurements drive ML-based risk assessment, which informs strategic decisions, while outcomes and feedback further train the AI models for increasingly autonomous operations. This design balances **technical accuracy** with **cost-effective and risk-aware decision-making** in orbital collision management.
+
+
+```mermaid
+flowchart TD
+    %% Technical Aspect: Observation to Execution & Feedback
+    subgraph Technical["Technical Aspect"]
+      direction TB
+      A[Ground-based Observations\nRadar, Optical, GNSS] --> B[Orbit Determination]
+      C[Space-based Observations\nCrosslinks, Onboard Sensors] --> B
+      B --> D[Data Fusion + Unified State]
+      D --> E[Propagation + Prediction]
+      E --> F[Risk Inference Engine using ML + Probabilistic Forecasting]
+      F -.-> H[Autonomous Maneuver Execution]
+      H --> I[Post-Maneuver Feedback]
+      I --> D
+    end
+
+    %% Economical Aspect: Strategy & Payout Parameters
+    subgraph Economical["Economical Aspect"]
+      direction TB
+      G[Decision & Strategy Categorization\n considering Payout Parameters e.g. cost, collision probability, insurance]
+      
+      %% Strategy Categories inside Economical Aspect
+      subgraph Strategy["Strategy Categories"]
+        direction TB
+        S1[Prevent]
+        S2[Mitigate]
+        S3[Share/Transfer]
+        S4[Accept]
+        S5[Do Nothing]
+      end
+      G --> Strategy
+      F --> G
+    end
+
+```
+
+## Technical Aspect of Workflow Pipelines
 
 ```mermaid
 flowchart TB
@@ -232,46 +277,103 @@ To overcome the dilemma and optimize strategies:
 ✅ This layer allows the **Tomorrow pipeline** to not only predict risks but also **quantify costs, incentives, and optimal strategies**, making autonomous or assisted maneuvers rational, fair, and efficient.
 
 ```mermaid
-
 flowchart LR
-  %% === FUTURE PIPELINE ===
-  subgraph FUTURE["Tomorrow with AI/ML + Game Theory"]
+  subgraph FUTURE["Tomorrow (AI/ML + Strategy + Payout Parameters)"]
     direction TB
-    A2[Ground-based Observations: Radar, Optical, GNSS] -->|Raw Tracking Data| B2[Orbit Determination]
-    A3[Space-based Observations: Crosslinks, Onboard Sensors] -->|Supplementary Measurements| J2[Data Fusion Layer Multi-source Sensor Fusion]
-    B2 -->|State Vector| C2[TLE Generation - for SGP4]
-    B2 -->|State Vector| D2[Ephemeris Generation - OEM SPICE]
 
+    %% Observation Layer
+    A2_GB["Ground-based Observations: Radar, Optical, GNSS"] -->|Raw Tracking Data| B2(Orbit Determination)
+    A2_SB["Space-based Observations: Crosslinks, Onboard Sensors"] -->|Supplementary Measurements| J2[Data Fusion Layer Multi-source Sensor Fusion]
+
+    B2 -->|State Vector| C2(TLE Generation for SGP4 - Approximate Orbit)
+    B2 -->|State Vector| D2(Ephemeris Generation OEM/SPICE - High Precision)
+
+    %% Data Fusion Layer
     C2 -->|Catalogs| J2
     D2 -->|Catalogs| J2
 
-    J2 -->|Unified State + Covariance| E2[Propagation and Prediction Models]
-    E2 -->|Trajectories + Uncertainty| K2[Risk Inference Engine ML and Probabilistic Forecasting]
+    %% Propagation and Risk Prediction
+    J2 -->|Unified State + Covariance| E2(Propagation and Prediction Models)
+    E2 -->|Trajectories + Uncertainty| K2(Risk Inference Engine ML + Probabilistic Forecasting)
 
-    K2 -->|Risk Assessment + Ranked Options| L2[Decision Support Layer Optimization and Game Theory]
+    %% Integrated Decision + Strategy Layer
+    K2 -->|Risk Assessment + Ranked Options| L2[Decision Support & Strategy Categorization]
 
-    %% Embed payoff logic inside decision support
-    subgraph Payoff["Game Theory Payoff Matrix"]
+    %% Strategy Categories with Payout Parameters
+    subgraph Strategy["Strategy Categories Output"]
       direction TB
-      P1[Maneuver vs Not Maneuver]
-      P2["(-1,-1) Both Maneuver"]
-      P3["(-1,0) A Maneuvers, B Free Rides"]
-      P4["(0,-1) A Free Rides, B Maneuvers"]
-      P5["(-100,-100) Neither Maneuvers"]
-      P1 --> P2 & P3 & P4 & P5
+      S1(Prevent: Full maneuver to avoid risk - Payout Parameters: High collision probability, high cost of collision)
+      S2(Mitigate: Partial orbit adjustment - Payout Parameters: Moderate collision probability, partial cost)
+      S3(Share/Transfer: Insurance, cooperative agreements - Payout Parameters: Expected cost shared, payoff matrix informs cooperation)
+      S4(Accept: Minor risk, no action - Payout Parameters: Low collision probability, cost > expected loss)
+      S5(Do Nothing: Negligible risk, high cost - Payout Parameters: Very low probability, negligible payoff impact)
     end
-    L2 --> Payoff
+    L2 --> Strategy
 
-    L2 -->|Candidate Maneuver Strategy| M2[Autonomous Maneuver Execution]
-    M2 -->|Executed Maneuver Data| N2[Post-Maneuver Feedback Loop]
-    N2 -->|Updated State + CDM Outcomes| O2[Continuous Learning Federated RL Supervised ML]
+    %% Autonomous Execution & Feedback (dotted arrow indicates learning/autonomy)
+    L2 -.->|Selected Strategy| M2(Autonomous Maneuver Execution)
+    M2 -->|Executed Maneuver Data| N2(Post-Maneuver Feedback Loop)
+    N2 -->|Updated State + CDM Outcomes| O2(Continuous Learning Federated RL Supervised ML)
     O2 --> J2
 
+    %% ML Opportunities
     K2 -.->|ML Opportunities: Supervised, Bayesian Updates, Reinforcement Learning, Graph NN| L2
   end
 
   %% === Styling ===
-  class J2,K2,L2,M2,N2,O2 new;
+  class J2,K2,L2,M2,N2,O2,Strategy new;
   classDef new fill:#ffe599,stroke:#cc9900;
 
+
 ```
+# Tomorrow Pipeline: AI/ML + Integrated Strategy + Payout Parameters
+
+This workflow represents the future vision of autonomous collision avoidance for space objects, integrating AI/ML, high-fidelity orbit propagation, and decision-making informed by payout parameters (game theory considerations).
+
+## Observation Layer
+
+- **Ground-based Observations (Left, human-in-the-loop)**  
+  Radar, Optical, GNSS measurements feed orbit determination. Represents current human-monitored and operated sensors.
+
+- **Space-based Observations (Right, autonomous / ML-assisted)**  
+  Crosslinks between satellites, onboard sensors, and space-based platforms provide supplementary measurements. These feed the data fusion layer for autonomous monitoring.
+
+## Orbit Determination & Propagation
+
+- **TLE Generation for SGP4 (Approximate Orbit)**  
+  Provides fast, compact orbital elements for catalog tracking and rapid propagation.
+
+- **Ephemeris Generation OEM/SPICE (High Precision)**  
+  Provides high-fidelity orbit data for precise conjunction assessment and maneuver planning.
+
+- Both TLE and Ephemeris feed the **Data Fusion Layer**, which combines multi-source information into unified states and covariances.
+
+- **Propagation and Prediction Models** take unified states to predict trajectories and uncertainties.
+
+## Risk Inference
+
+- **Risk Inference Engine (ML + Probabilistic Forecasting)** evaluates collision probabilities and ranks risk scenarios.  
+- Supports multiple ML approaches: supervised learning, Bayesian updates, reinforcement learning, graph neural networks.
+
+## Integrated Decision & Strategy Layer
+
+- Combines **risk assessment** with **payout parameters** (cost-benefit, collision probability, insurance, maneuver cost) to categorize strategies:  
+  - **Prevent:** Full maneuver to avoid risk  
+  - **Mitigate:** Partial orbit adjustment  
+  - **Share/Transfer:** Insurance or cooperative agreements  
+  - **Accept:** Minor risk, no action  
+  - **Do Nothing:** Negligible risk, high cost  
+
+- The **selected strategy** is indicated via a **dotted line** to autonomous maneuver execution, showing that over time the AI system learns and can execute strategies independently.
+
+## Execution & Feedback
+
+- **Autonomous Maneuver Execution** performs the selected strategy.  
+- **Post-Maneuver Feedback Loop** records executed maneuvers and updated CDM outcomes.  
+- **Continuous Learning** updates the ML models in a federated or supervised manner, closing the feedback loop.
+
+## Notes
+
+- Left-right split emphasizes **human-in-the-loop (ground-based)** versus **autonomous ML-assisted (space-based)** flow.  
+- Strategy categorization integrates **game theory / payout parameters** for informed decision-making.  
+- TLE-SGP4 is suitable for fast, approximate propagation; Ephemeris-OEM/SPICE is high-precision for critical maneuvers.
