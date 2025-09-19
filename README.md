@@ -44,6 +44,42 @@ flowchart TD
 
 ```
 
+## Focus on this study (Machine Learning Model including CDM)
+
+```mermaid
+flowchart TD
+
+    %% External Inputs
+    A[CDMs from SSA Providers] --> B[Data Ingestion Layer]
+    S[Satellite State & Telemetry] --> B
+    E[Environmental Data e.g. Space Weather, Drag Models, etc.] --> B
+
+    %% Data Processing
+    B --> C[Pre-processing & Feature Extraction]
+    C --> D[ML Risk Inference Engine]
+
+    %% ML Engine
+    D -->|Outputs| R[Risk Assessment]
+    R --> O[Operator Decision Support]
+    O --> A1[Maneuver Recommendation]
+    O --> A2[No Action / Monitor]
+
+    %% Feedback Loop
+    R --> F1[Event Outcome & Post-CDM]
+    A1 --> F1
+    A2 --> F1
+    F1 -->|Residual CDMs & Outcomes| D
+
+    %% Training Data Stream
+    F1 --> T[ML Training Pipeline]
+    T --> D
+
+    %% Explicit Feedback Highlight
+    style F1 fill:#ffe6cc,stroke:#ff6600,stroke-width:2px
+    style D fill:#e6f2ff,stroke:#003366,stroke-width:2px
+
+```
+
 ## Technical Aspect of Workflow Pipelines
 
 ```mermaid
