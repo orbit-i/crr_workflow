@@ -43,6 +43,20 @@ flowchart TD
     end
 
 ```
+```mermaid
+flowchart TD
+  CDM[CDM stream - TCA, Pc, Cov, IDs] --> Ingest[Ingest & Normalize]
+  Ingest --> FE[Feature Extraction - geometry, cov, hist, env]
+  FE --> RI[Risk Inference Engine - Calibrated Pc, Prioritized List]
+  RI --> DS[Decision Support - Payout Model & Strategy Recommendation]
+  DS -.-> Auto[Autonomous Execution ,dotted = learned/autonomous]
+  DS --> Human[Operator Review & Approval]
+  Auto --> Exec[Execute Maneuver]
+  Human --> Exec
+  Exec --> Post[Post-Maneuver Observations & Follow-up CDMs]
+  Post --> Feedback[Feedback & ML Training Pipeline]
+  Feedback --> RI
+```
 
 ## Focus on this study (Machine Learning Model including CDM)
 
